@@ -1,0 +1,4 @@
+/releases
+logs/
+lib/build
+test/bin
