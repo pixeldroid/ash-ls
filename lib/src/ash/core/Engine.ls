@@ -8,32 +8,34 @@ package ash.core
 	 */
 	public class Engine
 	{
+		public static const version:String = '1.0.0';
+
 		private var entityNames : Dictionary.<String, Entity>;
 		private var entityList : EntityList;
 		private var systemList : SystemList;
 		private var families : Dictionary.<Type, IFamily>;
-		
+
 		/**
 		 * Indicates if the engine is currently in its update loop.
 		 */
 		public var updating : Boolean;
-		
+
 		/**
 		 * Dispatched when the update loop ends. If you want to add and remove systems from the
 		 * engine it is usually best not to do so during the update loop. To avoid this you can
 		 * listen for this signal and make the change when the signal is dispatched.
 		 */
 		public var updateComplete : UpdateComplete;
-		
+
 		/**
 		 * The class used to manage node lists. In most cases the default class is sufficient
-		 * but it is exposed here so advanced developers can choose to create and use a 
+		 * but it is exposed here so advanced developers can choose to create and use a
 		 * different implementation.
-		 * 
+		 *
 		 * The class must implement the Family interface.
 		 */
 		public var familyClass : Type = ComponentMatchingFamily;
-		
+
 		public function Engine()
 		{
 			entityList = new EntityList();
@@ -42,10 +44,10 @@ package ash.core
 			families = new Dictionary.<Type, IFamily>();
 			updateComplete = new UpdateComplete();
 		}
-		
+
 		/**
 		 * Add an entity to the engine.
-		 * 
+		 *
 		 * @param entity The entity to add.
 		 */
 		public function addEntity( entity : Entity ) : void
@@ -61,10 +63,10 @@ package ash.core
 				family.newEntity( entity );
 			}
 		}
-		
+
 		/**
 		 * Remove an entity from the engine.
-		 * 
+		 *
 		 * @param entity The entity to remove.
 		 */
 		public function removeEntity( entity : Entity ) : void
@@ -79,7 +81,7 @@ package ash.core
 			entityNames.deleteKey( entity.name );
 			entityList.remove( entity );
 		}
-		
+
 		private function entityNameChanged( entity : Entity, oldName : String ) : void
 		{
 			if( entityNames[ oldName ] == entity )
@@ -88,10 +90,10 @@ package ash.core
 				entityNames[ entity.name ] = entity;
 			}
 		}
-		
+
 		/**
 		 * Get an entity based n its name.
-		 * 
+		 *
 		 * @param name The name of the entity
 		 * @return The entity, or null if no entity with that name exists on the engine
 		 */
@@ -99,7 +101,7 @@ package ash.core
 		{
 			return entityNames[ name ];
 		}
-		
+
 		/**
 		 * Remove all entities from the engine.
 		 */
@@ -110,7 +112,7 @@ package ash.core
 				removeEntity( entityList.head );
 			}
 		}
-		
+
 		/**
 		 * Returns a vector containing all the entities in the engine.
 		 */
@@ -123,7 +125,7 @@ package ash.core
 			}
 			return entitiesVector;
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -134,7 +136,7 @@ package ash.core
 				family.componentAddedToEntity( entity, componentClass );
 			}
 		}
-		
+
 		/**
 		 * @private
 		 */
@@ -145,16 +147,16 @@ package ash.core
 				family.componentRemovedFromEntity( entity, componentClass );
 			}
 		}
-		
+
 		/**
 		 * Get a collection of nodes from the engine, based on the type of the node required.
-		 * 
-		 * <p>The engine will create the appropriate NodeList if it doesn't already exist and 
+		 *
+		 * <p>The engine will create the appropriate NodeList if it doesn't already exist and
 		 * will keep its contents up to date as entities are added to and removed from the
 		 * engine.</p>
-		 * 
+		 *
 		 * <p>If a NodeList is no longer required, release it with the releaseNodeList method.</p>
-		 * 
+		 *
 		 * @param nodeClass The type of node required.
 		 * @return A linked list of all nodes of this type from all entities in the engine.
 		 */
@@ -174,15 +176,15 @@ package ash.core
 			}
 			return family.nodeList;
 		}
-		
+
 		/**
 		 * If a NodeList is no longer required, this method will stop the engine updating
 		 * the list and will release all references to the list within the framework
 		 * classes, enabling it to be garbage collected.
-		 * 
+		 *
 		 * <p>It is not essential to release a list, but releasing it will free
 		 * up memory and processor resources.</p>
-		 * 
+		 *
 		 * @param nodeClass The type of the node class if the list to be released.
 		 */
 		public function releaseNodeList( nodeClass : Type ) : void
@@ -193,17 +195,17 @@ package ash.core
 			}
 			families.deleteKey( nodeClass );
 		}
-		
+
 		/**
 		 * Add a system to the engine, and set its priority for the order in which the
 		 * systems are updated by the engine update loop.
-		 * 
-		 * <p>The priority dictates the order in which the systems are updated by the engine update 
-		 * loop. Lower numbers for priority are updated first. i.e. a priority of 1 is 
+		 *
+		 * <p>The priority dictates the order in which the systems are updated by the engine update
+		 * loop. Lower numbers for priority are updated first. i.e. a priority of 1 is
 		 * updated before a priority of 2.</p>
-		 * 
+		 *
 		 * @param system The system to add to the engine.
-		 * @param priority The priority for updating the systems during the engine loop. A 
+		 * @param priority The priority for updating the systems during the engine loop. A
 		 * lower number means the system is updated sooner.
 		 */
 		public function addSystem( system : System, priority : int ) : void
@@ -212,10 +214,10 @@ package ash.core
 			system.addToEngine( this );
 			systemList.add( system );
 		}
-		
+
 		/**
 		 * Get the system instance of a particular type from within the engine.
-		 * 
+		 *
 		 * @param type The type of system
 		 * @return The instance of the system type that is in the engine, or
 		 * null if no systems of this type are in the engine.
@@ -224,7 +226,7 @@ package ash.core
 		{
 			return systemList.getSystem( type );
 		}
-		
+
 		/**
 		 * Returns a vector containing all the systems in the engine.
 		 */
@@ -237,10 +239,10 @@ package ash.core
 			}
 			return systemsVector;
 		}
-		
+
 		/**
 		 * Remove a system from the engine.
-		 * 
+		 *
 		 * @param system The system to remove from the engine.
 		 */
 		public function removeSystem( system : System ) : void
@@ -248,7 +250,7 @@ package ash.core
 			systemList.remove( system );
 			system.removeFromEngine( this );
 		}
-		
+
 		/**
 		 * Remove all systems from the engine.
 		 */
@@ -263,10 +265,10 @@ package ash.core
 		/**
 		 * Update the engine. This causes the engine update loop to run, calling update on all the
 		 * systems in the engine.
-		 * 
+		 *
 		 * <p>The package net.richardlord.ash.tick contains classes that can be used to provide
 		 * a steady or variable tick that calls this update method.</p>
-		 * 
+		 *
 		 * @time The duration, in seconds, of this update step.
 		 */
 		public function update( time : Number ) : void
