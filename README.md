@@ -2,7 +2,7 @@
 
 A Loom port of the Ash entity system framework.
 
-> Loom: https://www.loomsdk.com
+> Loom: https://www.loomsdk.com <br>
 > Ash: http://www.ashframework.org
 
 Original port by [ghroot](https://github.com/ghroot/AshLoom).
