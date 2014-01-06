@@ -16,7 +16,7 @@ Download the library into its matching sdk folder:
 
 ```bash
 $ curl -L -o ~/.loom/sdks/sprint31/libs/Ash.loomlib \
-    https://github.com/pixeldroid/spec-ls/releases/download/v1.0.0/Ash-sprint31.loomlib
+    https://github.com/pixeldroid/ash-ls/releases/download/0.9.0/Ash-sprint31.loomlib
 ```
 
 To uninstall, simply delete the file:
