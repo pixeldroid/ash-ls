@@ -51,7 +51,7 @@ namespace :lib do
 	desc "prepares sdk-specific Ash.loomlib for release"
 	task :release => "lib/build/Ash.loomlib" do |t, args|
 		lib = 'lib/build/Ash.loomlib'
-		sdk = test_config['sdk_version']
+		sdk = lib_config['sdk_version']
 		ext = '.loomlib'
 		release_dir = 'releases'
 
