@@ -127,10 +127,16 @@ namespace :test do
 		sdk_version = test_config['sdk_version']
 
 		Dir.chdir("test") do
-			# magically, this binary loads bin/Main.loom from the current directory
-			cmd = %Q[#{sdk_root}/#{sdk_version}/bin/LoomDemo.app/Contents/MacOS/LoomDemo]
-			try(cmd, "failed to run .loom")
+			begin
+				# magically, this binary loads bin/Main.loom from the current directory
+				cmd = %Q[#{sdk_root}/#{sdk_version}/bin/LoomDemo.app/Contents/MacOS/LoomDemo\n]
+				try(cmd, "failed to launch #{t.prerequisites[0]}")
+			rescue Exception => e
+				puts ''
+			end
 		end
+
+		puts ''
 	end
 
 end
