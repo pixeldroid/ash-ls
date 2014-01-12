@@ -8,6 +8,7 @@ package
 	import pixeldroid.bdd.reporters.ConsoleReporter;
 
 	import AshSpec;
+	import EntitySpec;
 
 
 	public class AshTest extends Application
@@ -15,6 +16,7 @@ package
 		override public function run():void
 		{
 			AshSpec.describe();
+			EntitySpec.describe();
 
 			Spec.addReporter(new ConsoleReporter());
 			Spec.execute();
