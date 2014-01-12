@@ -21,7 +21,14 @@ task :list_targets do |t, args|
 	puts ''
 end
 
-file "lib/build/Ash.loomlib" do |t, args|
+
+LIBRARY = "lib/build/Ash.loomlib"
+
+FileList['lib/src/**/*.ls'].each do |src|
+	file LIBRARY => src
+end
+
+file LIBRARY do |t, args|
 	puts "[file] creating #{t.name}..."
 
 	sdk_version = lib_config['sdk_version']
@@ -32,14 +39,20 @@ file "lib/build/Ash.loomlib" do |t, args|
 	end
 end
 
-file "test/bin/Main.loom" => "lib/build/Ash.loomlib" do |t, args|
+
+APP = "test/bin/Main.loom"
+
+FileList['test/src/**/*.ls'].each do |src|
+	file APP => src
+end
+
+file APP => LIBRARY do |t, args|
 	puts "[file] creating #{t.name}..."
 
 	sdk_version = test_config['sdk_version']
 	file_installed = "#{sdk_root}/#{sdk_version}/libs/Ash.loomlib"
-	file_built = ["lib/build/Ash.loomlib"]
 
-	Rake::Task["lib:install"].invoke unless FileUtils.uptodate?(file_installed, file_built)
+	Rake::Task["lib:install"].invoke unless FileUtils.uptodate?(file_installed, [LIBRARY])
 
 	Dir.chdir("test") do
 		Dir.mkdir('bin') unless Dir.exists?('bin')
@@ -48,16 +61,17 @@ file "test/bin/Main.loom" => "lib/build/Ash.loomlib" do |t, args|
 	end
 end
 
+
 namespace :lib do
 
 	desc "builds Ash.loomlib for the SDK specified in lib/loom.config"
-	task :build => "lib/build/Ash.loomlib" do |t, args|
+	task :build => LIBRARY do |t, args|
 		puts "[#{t.name}] task completed, find .loomlib in lib/build/"
 		puts ''
 	end
 
 	desc "prepares sdk-specific Ash.loomlib for release"
-	task :release => "lib/build/Ash.loomlib" do |t, args|
+	task :release => LIBRARY do |t, args|
 		lib = 'lib/build/Ash.loomlib'
 		sdk = lib_config['sdk_version']
 		ext = '.loomlib'
@@ -73,7 +87,7 @@ namespace :lib do
 	end
 
 	desc "installs Ash.loomlib into the SDK specified in lib/loom.config"
-	task :install => "lib/build/Ash.loomlib" do |t, args|
+	task :install => LIBRARY do |t, args|
 		lib = 'lib/build/Ash.loomlib'
 		sdk_version = lib_config['sdk_version']
 		libs_path = "#{sdk_root}/#{sdk_version}/libs"
@@ -115,13 +129,13 @@ end
 namespace :test do
 
 	desc "builds AshTest as Main.loom with the SDK specified in test/loom.config"
-	task :build => "test/bin/Main.loom" do |t, args|
+	task :build => APP do |t, args|
 		puts "[#{t.name}] task completed, find .loom in test/bin/"
 		puts ''
 	end
 
 	desc "runs AshTest (Main.loom)"
-	task :run => "test/bin/Main.loom" do |t, args|
+	task :run => APP do |t, args|
 		puts "[#{t.name}] running #{t.prerequisites[0]}..."
 
 		sdk_version = test_config['sdk_version']
