@@ -101,6 +101,67 @@ package
 				var all:Vector.<Object> = entity.getAll();
 				it.expects(all.length).toEqual(0);
 			});
+
+			it.should('trigger delegates when adding components', function() {
+				entity = new Entity();
+				var component:MockComponent = new MockComponent();
+				var delegateCalled:Boolean = false;
+				entity.componentAdded += function(owner:Entity, flavor:Type) {
+					delegateCalled = true;
+					it.expects(owner).toEqual(entity);
+					it.expects(flavor).toEqual(MockComponent);
+				};
+				entity.add(component);
+				it.expects(delegateCalled).toBeTruthy();
+			});
+
+			it.should('trigger delegates when removing components', function() {
+				entity = new Entity();
+				var component:MockComponent = new MockComponent();
+				var delegateCalled:Boolean = false;
+				entity.add(component);
+				entity.componentRemoved += function(owner:Entity, flavor:Type) {
+					delegateCalled = true;
+					it.expects(owner).toEqual(entity);
+					it.expects(flavor).toEqual(MockComponent);
+				};
+				entity.remove(MockComponent);
+				it.expects(delegateCalled).toBeTruthy();
+			});
+
+			it.should('have a name by default', function() {
+				entity = new Entity();
+				it.expects(entity.name).not.toBeEmpty();
+			});
+
+			it.should('keep a given name', function() {
+				var customName:String = 'custom name';
+				entity = new Entity(customName);
+				it.expects(entity.name).toEqual(customName);
+			});
+
+			it.should('allow its name to be changed', function() {
+				var name:String = 'first choice';
+				entity = new Entity(name);
+				var name2:String = 'second choice';
+				entity.name = name2;
+				it.expects(entity.name).toEqual(name2);
+			});
+
+			it.should('trigger delegates when changing name', function() {
+				var name:String = 'first choice';
+				entity = new Entity(name);
+				var delegateCalled:Boolean = false;
+				var name2:String = 'second choice';
+				entity.nameChanged += function(owner:Entity, oldName:String) {
+					delegateCalled = true;
+					it.expects(owner).toEqual(entity);
+					it.expects(oldName).toEqual(name);
+					it.expects(owner.name).toEqual(name2);
+				};
+				entity.name = name2;
+				it.expects(delegateCalled).toBeTruthy();
+			});
 		}
 	}
 
