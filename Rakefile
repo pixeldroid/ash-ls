@@ -9,6 +9,8 @@ require 'rake/clean'
 @test_loom_config = nil
 
 CLEAN.include ["lib/build/**", "test/bin/**", "test/build/**"]
+CLOBBER.include ["lib/build", "test/bin", "test/build", "releases"]
+Rake::Task[:clobber].enhance ["lib:uninstall"]
 
 
 task :default => :list_targets
@@ -20,14 +22,19 @@ task :list_targets do |t, args|
 end
 
 file "lib/build/Ash.loomlib" do |t, args|
+	puts "[file] creating #{t.name}..."
+
 	sdk_version = lib_config['sdk_version']
 	Dir.chdir("lib") do
-		cmd = %Q[#{sdk_root}/#{sdk_version}/tools/lsc ash.build]
-		abort("◈ failed to compile .loomlib") if (exec_with_echo(cmd) != 0)
+		Dir.mkdir('build') unless Dir.exists?('build')
+		cmd = %Q[#{sdk_root}/#{sdk_version}/tools/lsc Ash.build]
+		try(cmd, "failed to compile .loomlib")
 	end
 end
 
 file "test/bin/Main.loom" => "lib/build/Ash.loomlib" do |t, args|
+	puts "[file] creating #{t.name}..."
+
 	sdk_version = test_config['sdk_version']
 	file_installed = "#{sdk_root}/#{sdk_version}/libs/Ash.loomlib"
 	file_built = ["lib/build/Ash.loomlib"]
@@ -35,8 +42,9 @@ file "test/bin/Main.loom" => "lib/build/Ash.loomlib" do |t, args|
 	Rake::Task["lib:install"].invoke unless FileUtils.uptodate?(file_installed, file_built)
 
 	Dir.chdir("test") do
+		Dir.mkdir('bin') unless Dir.exists?('bin')
 		cmd = %Q[#{sdk_root}/#{sdk_version}/tools/lsc]
-		abort("◈ failed to compile .loom") if (exec_with_echo(cmd) != 0)
+		try(cmd, "failed to compile .loom")
 	end
 end
 
@@ -55,7 +63,7 @@ namespace :lib do
 		ext = '.loomlib'
 		release_dir = 'releases'
 
-		Dir.mkdir(release_dir) unless File.exists?(release_dir)
+		Dir.mkdir(release_dir) unless Dir.exists?(release_dir)
 
 		lib_release = %Q[#{File.basename(lib, ext)}-#{sdk}#{ext}]
 		FileUtils.copy(lib, "#{release_dir}/#{lib_release}")
@@ -71,7 +79,7 @@ namespace :lib do
 		libs_path = "#{sdk_root}/#{sdk_version}/libs"
 
 		cmd = %Q[cp #{lib} #{libs_path}]
-		abort("◈ failed to install lib") if (exec_with_echo(cmd) != 0)
+		try(cmd, "failed to install lib")
 
 		puts "[#{t.name}] task completed, Ash.loomlib installed for #{sdk_version}"
 		puts ''
@@ -84,7 +92,7 @@ namespace :lib do
 
 		if (File.exists?(lib))
 			cmd = %Q[rm -f #{lib}]
-			abort("◈ failed to remove lib") if (exec_with_echo(cmd) != 0)
+			try(cmd, "failed to remove lib")
 			puts "[#{t.name}] task completed, Ash.loomlib removed from #{sdk_version}"
 		else
 			puts "[#{t.name}] nothing to do;  no Ash.loomlib found in #{sdk_version} sdk"
@@ -95,8 +103,10 @@ namespace :lib do
 	desc "lists libs installed for the SDK specified in lib/loom.config"
 	task :show do |t, args|
 		sdk_version = lib_config['sdk_version']
+
 		cmd = %Q[ls -l #{sdk_root}/#{sdk_version}/libs]
-		abort("◈ failed to list contents of #{sdk_version} libs directory") if (exec_with_echo(cmd) != 0)
+		try(cmd, "failed to list contents of #{sdk_version} libs directory")
+
 		puts ''
 	end
 
@@ -112,12 +122,14 @@ namespace :test do
 
 	desc "runs AshTest (Main.loom)"
 	task :run => "test/bin/Main.loom" do |t, args|
+		puts "[#{t.name}] running #{t.prerequisites[0]}..."
+
 		sdk_version = test_config['sdk_version']
 
 		Dir.chdir("test") do
 			# magically, this binary loads bin/Main.loom from the current directory
 			cmd = %Q[#{sdk_root}/#{sdk_version}/bin/LoomDemo.app/Contents/MacOS/LoomDemo]
-			abort("◈ failed to run .loom") if (exec_with_echo(cmd) != 0)
+			try(cmd, "failed to run .loom")
 		end
 	end
 
@@ -125,15 +137,19 @@ end
 
 
 def lib_config
-	@lib_loom_config || (@lib_loom_config = JSON.parse(File.read('lib/loom.config')))
+	@lib_loom_config || (@lib_loom_config = JSON.parse(File.read(File.join('lib', 'loom.config'))))
 end
 
 def test_config
-	@test_loom_config || (@test_loom_config = JSON.parse(File.read('test/loom.config')))
+	@test_loom_config || (@test_loom_config = JSON.parse(File.read(File.join('test', 'loom.config'))))
 end
 
 def sdk_root
-	"/Users/#{Etc.getlogin}/.loom/sdks"
+	File.join(Dir.home, '.loom', 'sdks')
+end
+
+def try(cmd, failure_message)
+	abort("◈ #{failure_message}") if (exec_with_echo(cmd) != 0)
 end
 
 def exec_with_echo(cmd)
