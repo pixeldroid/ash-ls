@@ -30,7 +30,7 @@ $ rm ~/.loom/sdks/sprint31/libs/Ash.loomlib
 
 The API is identical to the [original ActionScript version](http://www.ashframework.org), with the following exceptions.
 
-### Delegates instead of Signals
+#### Delegates instead of Signals
 
 [Loom delegates](http://www.youtube.com/watch?v=h83QPCOldbY) are used instead of [Ash Signals](https://github.com/richardlord/Ash/tree/master/src/ash/signals):
 
@@ -44,7 +44,7 @@ private function onNodeAdded(node:Node):void
 }
 ```
 
-### `Entity.getComponent()` instead of `Entity.get()`
+#### `Entity.getComponent()` instead of `Entity.get()`
 
 Loom does not allow methods named `get`.
 
