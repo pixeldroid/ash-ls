@@ -28,7 +28,11 @@ $ rm ~/.loom/sdks/sprint31/libs/Ash.loomlib
 
 ## Usage
 
-Usage is identical to the [original ActionScript version](http://www.ashframework.org) except for listening, where delegates are used instead of events:
+The API is identical to the [original ActionScript version](http://www.ashframework.org), with the following exceptions.
+
+#### Delegates instead of Signals
+
+[Loom delegates](http://www.youtube.com/watch?v=h83QPCOldbY) are used instead of [Ash Signals](https://github.com/richardlord/Ash/tree/master/src/ash/signals):
 
 ```
 var nodeList:NodeList = engine.getNodeList(MyNode);
@@ -39,6 +43,10 @@ private function onNodeAdded(node:Node):void
 	// ...
 }
 ```
+
+#### `Entity.getComponent()` instead of `Entity.get()`
+
+Loom does not allow methods named `get`.
 
 
 ## Compiling from source

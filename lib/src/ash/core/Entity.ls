@@ -4,7 +4,7 @@ package ash.core
 
 	public delegate ComponentAdded(entity : Entity, componentClass : Type) : void;
 	public delegate ComponentRemoved(entity : Entity, componentClass : Type) : void;
-	public delegate NameChanged(entity : Entity, name : String) : void;
+	public delegate NameChanged(entity : Entity, oldName : String) : void;
 
 	/**
 	 * An entity is composed from components. As such, it is essentially a collection object for components. 
