@@ -32,6 +32,7 @@ file LIBRARY do |t, args|
 	puts "[file] creating #{t.name}..."
 
 	sdk_version = lib_config['sdk_version']
+
 	Dir.chdir("lib") do
 		Dir.mkdir('build') unless Dir.exists?('build')
 		cmd = %Q[#{sdk_root}/#{sdk_version}/tools/lsc Ash.build]
@@ -59,6 +60,8 @@ file APP => LIBRARY do |t, args|
 		cmd = %Q[#{sdk_root}/#{sdk_version}/tools/lsc]
 		try(cmd, "failed to compile .loom")
 	end
+
+	puts ''
 end
 
 
