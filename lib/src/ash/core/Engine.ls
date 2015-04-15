@@ -8,7 +8,7 @@ package ash.core
 	 */
 	public class Engine
 	{
-		public static const version:String = '1.0.0';
+		public static const version:String = '0.10.0';
 
 		private var entityNames : Dictionary.<String, Entity>;
 		private var entityList : EntityList;
