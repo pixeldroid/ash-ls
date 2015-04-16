@@ -1,0 +1,21 @@
+{
+    "name": "AshTest",
+    "version": "1.0",
+    "executable": true,
+    "outputDir": "bin",
+    "references": [
+        "System",
+        "Spec",
+        "Ash"
+    ],
+    "modules": [
+        {
+            "name": "AshTest",
+            "version": "1.0",
+            "sourcePath": [
+                "app",
+                "spec"
+            ]
+        }
+    ]
+}

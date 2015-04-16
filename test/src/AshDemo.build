@@ -1,0 +1,22 @@
+{
+    "name": "AshDemo",
+    "version": "1.0",
+    "executable": true,
+    "outputDir": "bin",
+    "references": [
+        "System",
+        "Loom",
+        "Spec",
+        "Ash"
+    ],
+    "modules": [
+        {
+            "name": "AshDemo",
+            "version": "1.0",
+            "sourcePath": [
+                "demo",
+                "spec"
+            ]
+        }
+    ]
+}
