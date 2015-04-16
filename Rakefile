@@ -23,3 +23,9 @@ Rake::Task['test:build'].clear # no gui demo for this project
 Rake::Task['test:ci'].clear # no gui demo for this project
 Rake::Task['test:run'].clear # no gui demo for this project
 Rake::Task['demo:cli'].clear # no gui demo for this project
+
+desc [
+  "runs the unit test",
+  "shorthand for rake demo:gui",
+].join("\n")
+task :test => 'demo:gui'
