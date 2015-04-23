@@ -266,8 +266,8 @@ package ash.core
 		 * Update the engine. This causes the engine update loop to run, calling update on all the
 		 * systems in the engine.
 		 *
-		 * <p>The package net.richardlord.ash.tick contains classes that can be used to provide
-		 * a steady or variable tick that calls this update method.</p>
+		 * The `ash.tick` package contains classes that can be used to provide
+		 * a fixed or measured tick to call this update method.
 		 *
 		 * @time The duration, in seconds, of this update step.
 		 */
