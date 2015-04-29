@@ -89,7 +89,7 @@ package ash.core
 		}
 
 		/**
-		 * Add a component to the entity.
+		 * Add a component to the entity by type.
 		 *
 		 * @param component The component object to add.
 		 * @param componentClass The class of the component. This is only necessary if the component
@@ -119,7 +119,7 @@ package ash.core
 		}
 
 		/**
-		 * Remove a component from the entity.
+		 * Remove a component from the entity by type.
 		 *
 		 * @param componentClass The class of the component to be removed.
 		 * @return the component, or null if the component doesn't exist in the entity
