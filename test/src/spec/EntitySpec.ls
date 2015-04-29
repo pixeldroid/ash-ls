@@ -25,8 +25,8 @@ package
 				entity.add(component);
 				var component2:MockComponent2 = new MockComponent2();
 				entity.add(component2);
-				it.expects(entity.getComponent(MockComponent)).toEqual(component);
-				it.expects(entity.getComponent(MockComponent2)).toEqual(component2);
+				it.expects(entity.fetch(MockComponent)).toEqual(component);
+				it.expects(entity.fetch(MockComponent2)).toEqual(component2);
 			});
 
 			it.should('replace components of the same type', function() {
@@ -36,7 +36,7 @@ package
 				var component2:MockComponent = new MockComponent();
 				entity.add(component2);
 				it.expects(component).not.toEqual(component2);
-				it.expects(entity.getComponent(MockComponent)).toEqual(component2);
+				it.expects(entity.fetch(MockComponent)).toEqual(component2);
 			});
 
 			it.should('store base and extended components', function() {
@@ -45,21 +45,21 @@ package
 				entity.add(component);
 				var component2:MockComponentExtended = new MockComponentExtended();
 				entity.add(component2);
-				it.expects(entity.getComponent(MockComponent)).toEqual(component);
-				it.expects(entity.getComponent(MockComponentExtended)).toEqual(component2);
+				it.expects(entity.fetch(MockComponent)).toEqual(component);
+				it.expects(entity.fetch(MockComponentExtended)).toEqual(component2);
 			});
 
 			it.should('store extended components as base type', function() {
 				entity = new Entity();
 				var component:MockComponentExtended = new MockComponentExtended();
 				entity.add(component, MockComponent);
-				it.expects(entity.getComponent(MockComponent)).toEqual(component);
-				it.expects(entity.getComponent(MockComponentExtended)).toBeNull();
+				it.expects(entity.fetch(MockComponent)).toEqual(component);
+				it.expects(entity.fetch(MockComponentExtended)).toBeNull();
 			});
 
 			it.should('retrieve null when no components match given type', function() {
 				entity = new Entity();
-				it.expects(entity.getComponent(MockComponent)).toBeNull();
+				it.expects(entity.fetch(MockComponent)).toBeNull();
 			});
 
 			it.should('retrieve all components', function() {
@@ -68,7 +68,7 @@ package
 				entity.add(component);
 				var component2:MockComponent2 = new MockComponent2();
 				entity.add(component2);
-				var all:Vector.<Object> = entity.getAll();
+				var all:Vector.<Object> = entity.fetchAll();
 				it.expects(all.length).toEqual(2);
 				it.expects(all).toContain(component);
 				it.expects(all).toContain(component2);
@@ -98,7 +98,7 @@ package
 				entity.add(component);
 				entity.remove(MockComponent);
 				it.expects(entity.has(MockComponent)).toBeFalsey();
-				var all:Vector.<Object> = entity.getAll();
+				var all:Vector.<Object> = entity.fetchAll();
 				it.expects(all.length).toEqual(0);
 			});
 
