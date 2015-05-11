@@ -13,7 +13,7 @@ package ash.core
 	{
 		private var nodes : NodeList;
 		private var entities : Dictionary.<Entity, Node>;
-		private var nodeClass : Type;
+		private var familyType : Type;
 		private var components : Dictionary.<Type, String>;
 		private var nodePool : NodePool;
 		private var engine : Engine;
@@ -30,26 +30,27 @@ package ash.core
 		 * Initialises the class. Creates the nodelist and other tools. Analyses the node to determine
 		 * what component types the node requires.
 		 *
-		 * @param nodeClass The type of node to create and manage a NodeList for.
-		 * @param engine The engine that this family is managing teh NodeList for.
+		 * @param familyType The type of node to create and manage a NodeList for.
+		 * @param engine The engine that this family is managing the NodeList for.
 		 */
-		public function init( nodeClass : Type, engine : Engine ) : void
+		public function init( familyType : Type, engine : Engine ) : void
 		{
-			this.nodeClass = nodeClass;
+			this.familyType = familyType;
 			this.engine = engine;
 			nodes = new NodeList();
-			entities = new Dictionary();
-			components = new Dictionary();
-			nodePool = new NodePool( nodeClass, components );
+			entities = new Dictionary.<Entity, Node>();
+			components = new Dictionary.<Type, String>();
+			nodePool = new NodePool( familyType, components );
 
 			nodePool.dispose( nodePool.getNode() ); // create a dummy instance to ensure describeType works.
 
-			for each (var fieldName : String in nodeClass.getFieldAndPropertyList())
+			for each (var fieldName : String in familyType.getFieldAndPropertyList())
 			{
-				var fieldInfo : FieldInfo = nodeClass.getFieldInfoByName(fieldName);
+				var fieldInfo : FieldInfo = familyType.getFieldInfoByName(fieldName);
 				if (fieldName != "entity" && fieldName != "previous" && fieldName != "next" && fieldName != "NaN")
 				{
-					components[fieldInfo.getMemberType()] = fieldName;
+					var type:Type = fieldInfo.getMemberType();
+					components[type] = fieldName;
 				}
 			}
 		}
@@ -106,7 +107,7 @@ package ash.core
 
 		/**
 		 * If the entity is not in this family's NodeList, tests the components of the entity to see
-		 * if it should be in this NodeList and adds it if so.
+		 * if it should be in this family's NodeList and adds it if so.
 		 */
 		private function addIfMatch( entity : Entity ) : void
 		{
@@ -121,11 +122,12 @@ package ash.core
 					}
 				}
 				var node : Node = nodePool.getNode();
+				var nodeClass : Type = node.getType();
 				node.entity = entity;
+				var fieldInfo : FieldInfo;
 				for ( componentClass in components )
 				{
-					var nodeClass : Type = node.getType();
-					var fieldInfo : FieldInfo = nodeClass.getFieldInfoByName( components[componentClass] );
+					fieldInfo = nodeClass.getFieldInfoByName( components[componentClass] );
 					fieldInfo.setValue( node, entity.fetch( componentClass ) );
 				}
 				entities[entity] = node;
