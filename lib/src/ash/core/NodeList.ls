@@ -37,12 +37,14 @@ package ash.core
 		 * <p>The delegate will pass a single parameter to the listeners - the node that was added.</p>
 		 */
 		public var nodeAdded : NodeAdded;
+
 		/**
 		 * A delegate that is called whenever a node is removed from the node list.
 		 *
 		 * <p>The delegate will pass a single parameter to the listeners - the node that was removed.</p>
 		 */
 		public var nodeRemoved : NodeRemoved;
+
 
 		public function NodeList()
 		{

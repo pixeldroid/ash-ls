@@ -26,7 +26,7 @@ package ash.core
 	 */
 	public class Entity
 	{
-		private static var nameCount : int = 0;
+		private static var nameCount : Number = 0;
 
 		/**
 		 * Optional, give the entity a name. This can help with debugging and with serialising the entity.
@@ -47,7 +47,7 @@ package ash.core
 
 		public var previous : Entity;
 		public var next : Entity;
-		public var components : Dictionary;
+		public var components : Dictionary.<Type, Object>;
 
 		/**
 		 * The constructor
@@ -56,23 +56,18 @@ package ash.core
 		 */
 		public function Entity( name : String = "" )
 		{
+			_name = (name.length > 0) ? name : "_entity" + (++nameCount);
+
 			componentAdded = new ComponentAdded();
 			componentRemoved = new ComponentRemoved();
 			nameChanged = new NameChanged();
-			components = new Dictionary();
-			if( name )
-			{
-				_name = name;
-			}
-			else
-			{
-				_name = "_entity" + (++nameCount);
-			}
+			components = new Dictionary.<Type, Object>();
 		}
 
 		/**
-		 * All entities have a name. If no name is set, a default name is used. Names are used to
-		 * fetch specific entities from the engine, and can also help to identify an entity when debugging.
+		 * All entities have a name. If no name is set, a default name is used.
+		 * Names are used to fetch specific entities from the engine and can also help to
+		 * identify an entity when debugging.
 		 */
 		public function get name() : String
 		{
@@ -105,16 +100,15 @@ package ash.core
 		 */
 		public function add( component : Object, componentClass : Type = null ) : Entity
 		{
-			if ( !componentClass )
+			var key : Type = componentClass ? componentClass : component.getType();
+
+
+			if ( components[ key ] )
 			{
-				componentClass = component.getType();
+				remove( key );
 			}
-			if ( components[ componentClass ] )
-			{
-				remove( componentClass );
-			}
-			components[ componentClass ] = component;
-			componentAdded( this, componentClass );
+			components[ key ] = component;
+			componentAdded( this, key );
 			return this;
 		}
 
@@ -126,11 +120,12 @@ package ash.core
 		 */
 		public function remove( componentClass : Type ) : Object
 		{
-			var component : Object = components[ componentClass ];
+			var key : Type = componentClass;
+			var component : Object = components[ key ];
 			if ( component )
 			{
-				components.deleteKey( componentClass );
-				componentRemoved( this, componentClass );
+				components.deleteKey( key );
+				componentRemoved( this, key );
 				return component;
 			}
 			return null;
@@ -144,7 +139,8 @@ package ash.core
 		 */
 		public function fetch( componentClass : Type ) : Object
 		{
-			return components[ componentClass ];
+			var key : Type = componentClass;
+			return components[ key ];
 		}
 
 		/**
@@ -170,7 +166,13 @@ package ash.core
 		 */
 		public function has( componentClass : Type ) : Boolean
 		{
-			return components[ componentClass ] != null;
+			var key : Type = componentClass;
+			return components[ key ] != null;
+		}
+
+		public function toString() : String
+		{
+			return _name;
 		}
 	}
 }

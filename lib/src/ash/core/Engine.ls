@@ -3,17 +3,17 @@ package ash.core
 	public delegate UpdateComplete() : void;
 
 	/**
-	 * The Engine class is the central point for creating and managing your game state. Add
-	 * entities and systems to the engine, and fetch families of nodes from the engine.
+	 * The Engine class is the central point for creating and managing game state.
+	 * Add entities and systems to the engine, and fetch families of nodes from the engine.
 	 */
 	public class Engine
 	{
 		public static const version:String = '0.10.0';
 
-		private var entityNames : Dictionary.<String, Entity>;
 		private var entityList : EntityList;
-		private var systemList : SystemList;
+		private var entityNames : Dictionary.<String, Entity>;
 		private var families : Dictionary.<Type, IFamily>;
+		private var systemList : SystemList;
 
 		/**
 		 * Indicates if the engine is currently in its update loop.
@@ -23,7 +23,7 @@ package ash.core
 		/**
 		 * Dispatched when the update loop ends. If you want to add and remove systems from the
 		 * engine it is usually best not to do so during the update loop. To avoid this you can
-		 * listen for this signal and make the change when the signal is dispatched.
+		 * attach to this delegate and make the change in your callback.
 		 */
 		public var updateComplete : UpdateComplete;
 
@@ -36,12 +36,13 @@ package ash.core
 		 */
 		public var familyClass : Type = ComponentMatchingFamily;
 
+
 		public function Engine()
 		{
 			entityList = new EntityList();
 			entityNames = new Dictionary.<String, Entity>();
-			systemList = new SystemList();
 			families = new Dictionary.<Type, IFamily>();
+			systemList = new SystemList();
 			updateComplete = new UpdateComplete();
 		}
 
@@ -126,6 +127,7 @@ package ash.core
 			return entitiesVector;
 		}
 
+
 		/**
 		 * @private
 		 */
@@ -169,6 +171,7 @@ package ash.core
 			var family : IFamily = familyClass.getConstructor().invoke() as IFamily;
 			var initMethodInfo : MethodInfo = familyClass.getMethodInfo("init");
 			initMethodInfo.invoke( family, nodeClass, this );
+
 			families[nodeClass] = family;
 			for( var entity : Entity = entityList.head; entity; entity = entity.next )
 			{
