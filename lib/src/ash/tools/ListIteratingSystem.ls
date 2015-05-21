@@ -66,7 +66,7 @@ package ash.tools
 		{
 			if( nodeAddedFunction != null )
 			{
-				nodeList.nodeAdded += onNodeAdded;
+				nodeList.nodeAdded -= onNodeAdded;
 			}
 			if( nodeRemovedFunction != null )
 			{
