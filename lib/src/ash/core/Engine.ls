@@ -168,6 +168,7 @@ package ash.core
 			{
 				return IFamily( families[nodeClass] ).nodeList;
 			}
+
 			var family : IFamily = familyClass.getConstructor().invoke() as IFamily;
 			var initMethodInfo : MethodInfo = familyClass.getMethodInfo("init");
 			initMethodInfo.invoke( family, nodeClass, this );
@@ -177,6 +178,7 @@ package ash.core
 			{
 				family.newEntity( entity );
 			}
+
 			return family.nodeList;
 		}
 

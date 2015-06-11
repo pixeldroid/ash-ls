@@ -37,6 +37,7 @@ package ash.core
 		{
 			this.familyType = familyType;
 			this.engine = engine;
+
 			nodes = new NodeList();
 			entities = new Dictionary.<Entity, Node>();
 			components = new Dictionary.<Type, String>();
@@ -116,11 +117,9 @@ package ash.core
 				var componentClass : Type;
 				for ( componentClass in components )
 				{
-					if ( !entity.has( componentClass ) )
-					{
-						return;
-					}
+					if ( !entity.has( componentClass ) ) return;
 				}
+
 				var node : Node = nodePool.getNode();
 				var nodeClass : Type = node.getType();
 				node.entity = entity;
@@ -130,6 +129,7 @@ package ash.core
 					fieldInfo = nodeClass.getFieldInfoByName( components[componentClass] );
 					fieldInfo.setValue( node, entity.fetch( componentClass ) );
 				}
+
 				entities[entity] = node;
 				nodes.add( node );
 			}

@@ -101,12 +101,7 @@ package ash.core
 		public function add( component : Object, componentClass : Type = null ) : Entity
 		{
 			var key : Type = componentClass ? componentClass : component.getType();
-
-
-			if ( components[ key ] )
-			{
-				remove( key );
-			}
+			if ( components[ key ] ) remove( key );
 			components[ key ] = component;
 			componentAdded( this, key );
 			return this;
