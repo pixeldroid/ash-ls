@@ -1,0 +1,5 @@
+#!/bin/bash
+
+{ rake clean test & } && sleep 3 && pkill LoomDemo && pkill rake
+
+exit 0
