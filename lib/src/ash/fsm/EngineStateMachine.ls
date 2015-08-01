@@ -9,9 +9,14 @@ package ash.fsm
 	 */
 	public class EngineStateMachine
 	{
+		/**
+		 * The engine whose state machine this is
+		 */
 		public var engine : Engine;
+
 		private var states : Dictionary.<String, EngineState>;
 		private var currentState : EngineState;
+		private var _currentStateName : String;
 
 		/**
 		 * Constructor. Creates an SystemStateMachine.
@@ -95,6 +100,15 @@ package ash.fsm
 				engine.addSystem( provider.getSystem(), provider.priority );
 			}
 			currentState = newState;
+			_currentStateName = name;
+		}
+
+		/**
+		 * Retrieve the name of the current state
+		 */
+		public function get currentStateName() : String
+		{
+			return _currentStateName;
 		}
 	}
 }
