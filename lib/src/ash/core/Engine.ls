@@ -170,7 +170,7 @@ package ash.core
 			}
 
 			var family : IFamily = familyClass.getConstructor().invoke() as IFamily;
-			var initMethodInfo : MethodInfo = familyClass.getMethodInfo("init");
+			var initMethodInfo : MethodInfo = familyClass.getMethodInfoByName("init");
 			initMethodInfo.invoke( family, nodeClass, this );
 
 			families[nodeClass] = family;
