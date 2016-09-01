@@ -12,7 +12,7 @@ package
 			var it:Thing = Spec.describe('Ash');
 
 			it.should('be versioned', function() {
-				it.expects(Engine.version).not.toBeEmpty();
+				it.expects(Engine.version).toPatternMatch('(%d+).(%d+).(%d+)', 3);
 			});
 		}
 	}
