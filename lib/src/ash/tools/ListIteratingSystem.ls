@@ -8,11 +8,12 @@ package ash.tools
 	import ash.core.System;
 
 	/**
-	 * A useful class for systems which simply iterate over a set of nodes, performing the same action on each node. This
-	 * class removes the need for a lot of boilerplate code in such systems. Extend this class and pass the node type and
-	 * a node update method into the constructor. The node update method will be called once per node on the update cycle
+	 * A useful class for systems which simply iterate over a single nodetype.
+	 * This class removes much of the boilerplate code in such systems.
+	 * Extend this class and pass the node type and a node update method into the constructor.
+	 * The node update method will be called once per node on the update cycle
 	 * with the node instance and the frame time as parameters. e.g.
-	 * 
+	 *
 	 * <code>package
 	 * {
 	 *   public class MySystem extends ListIteratingSystem
@@ -21,7 +22,7 @@ package ash.tools
 	 *     {
 	 *       super( MyNode, updateNode );
 	 *     }
-	 *     
+	 *
 	 *     private function updateNode( node : MyNode, time : Number ) : void
 	 *     {
 	 *       // process the node here
@@ -36,7 +37,7 @@ package ash.tools
 		protected var nodeUpdateFunction : Function;
 		protected var nodeAddedFunction : Function;
 		protected var nodeRemovedFunction : Function;
-		
+
 		public function ListIteratingSystem( nodeClass : Type, nodeUpdateFunction : Function, nodeAddedFunction : Function = null, nodeRemovedFunction : Function = null )
 		{
 			this.nodeClass = nodeClass;
@@ -44,7 +45,7 @@ package ash.tools
 			this.nodeAddedFunction = nodeAddedFunction;
 			this.nodeRemovedFunction = nodeRemovedFunction;
 		}
-		
+
 		override public function addToEngine( engine : Engine ) : void
 		{
 			nodeList = engine.getNodeList( nodeClass );
@@ -61,12 +62,12 @@ package ash.tools
 				nodeList.nodeRemoved += onNodeRemoved;
 			}
 		}
-		
+
 		override public function removeFromEngine( engine : Engine ) : void
 		{
 			if( nodeAddedFunction != null )
 			{
-				nodeList.nodeAdded += onNodeAdded;
+				nodeList.nodeAdded -= onNodeAdded;
 			}
 			if( nodeRemovedFunction != null )
 			{
@@ -74,7 +75,7 @@ package ash.tools
 			}
 			nodeList = null;
 		}
-		
+
 		override public function update( time : Number ) : void
 		{
 			for( var node : Node = nodeList.head; node; node = node.next )

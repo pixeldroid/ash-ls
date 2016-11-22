@@ -11,15 +11,14 @@ package ash.fsm
 	 */
 	public class EntityStateMachine
 	{
-		private var states : Dictionary.<String, EntityState>;
-		/**
-		 * The current state of the state machine.
-		 */
-		private var currentState : EntityState;
 		/**
 		 * The entity whose state machine this is
 		 */
 		public var entity : Entity;
+
+		private var states : Dictionary.<String, EntityState>;
+		private var currentState : EntityState;
+		private var _currentStateName : String;
 
 		/**
 		 * Constructor. Creates an EntityStateMachine.
@@ -32,7 +31,7 @@ package ash.fsm
 
 		/**
 		 * Add a state to this state machine.
-		 * 
+		 *
 		 * @param name The name of this state - used to identify it later in the changeState method call.
 		 * @param state The state.
 		 * @return This state machine, so methods can be chained.
@@ -42,10 +41,10 @@ package ash.fsm
 			states[ name ] = state;
 			return this;
 		}
-		
+
 		/**
 		 * Create a new state in this state machine.
-		 * 
+		 *
 		 * @param name The name of the new state - used to identify it later in the changeState method call.
 		 * @return The new EntityState object that is the state. This will need to be configured with
 		 * the appropriate component providers.
@@ -60,7 +59,7 @@ package ash.fsm
 		/**
 		 * Change to a new state. The components from the old state will be removed and the components
 		 * for the new state will be added.
-		 * 
+		 *
 		 * @param name The name of the state to change to.
 		 */
 		public function changeState( name : String ) : void
@@ -104,6 +103,14 @@ package ash.fsm
 				entity.add( IComponentProvider( toAdd[ type ] ).getComponent(), type );
 			}
 			currentState = newState;
+		}
+
+		/**
+		 * Retrieve the name of the current state
+		 */
+		public function get currentStateName() : String
+		{
+			return _currentStateName;
 		}
 	}
 }

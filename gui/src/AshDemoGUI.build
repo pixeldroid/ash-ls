@@ -1,0 +1,22 @@
+{
+    "name": "AshDemoGUI",
+    "version": "1.0",
+    "executable": true,
+    "outputDir": "./bin",
+    "references": [
+        "System",
+        "Loom",
+        "Spec",
+        "Ash"
+    ],
+    "modules": [
+        {
+            "name": "AshDemoGUI",
+            "version": "1.0",
+            "sourcePath": [
+                "app",
+                "spec"
+            ]
+        }
+    ]
+}

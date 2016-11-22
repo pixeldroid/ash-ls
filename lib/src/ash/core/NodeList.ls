@@ -2,21 +2,21 @@ package ash.core
 {
 	public delegate NodeAdded(node : Node) : void;
 	public delegate NodeRemoved(node : Node) : void;
-	
+
 	/**
 	 * A collection of nodes.
-	 * 
+	 *
 	 * <p>Systems within the engine access the components of entities via NodeLists. A NodeList contains
 	 * a node for each Entity in the engine that has all the components required by the node. To iterate
 	 * over a NodeList, start from the head and step to the next on each loop, until the returned value
 	 * is null.</p>
-	 * 
+	 *
 	 * <p>for( var node : Node = nodeList.head; node; node = node.next )
 	 * {
 	 *   // do stuff
 	 * }</p>
-	 * 
-	 * <p>It is safe to remove items from a nodelist during the loop. When a Node is removed form the 
+	 *
+	 * <p>It is safe to remove items from a nodelist during the loop. When a Node is removed form the
 	 * NodeList it's previous and next properties still point to the nodes that were before and after
 	 * it in the NodeList just before it was removed.</p>
 	 */
@@ -30,26 +30,28 @@ package ash.core
 		 * The last item in the node list, or null if the list contains no nodes.
 		 */
 		public var tail : Node;
-		
+
 		/**
-		 * A signal that is dispatched whenever a node is added to the node list.
-		 * 
-		 * <p>The signal will pass a single parameter to the listeners - the node that was added.</p>
+		 * A delegate that is called whenever a node is added to the node list.
+		 *
+		 * <p>The delegate will pass a single parameter to the listeners - the node that was added.</p>
 		 */
 		public var nodeAdded : NodeAdded;
+
 		/**
-		 * A signal that is dispatched whenever a node is removed from the node list.
-		 * 
-		 * <p>The signal will pass a single parameter to the listeners - the node that was removed.</p>
+		 * A delegate that is called whenever a node is removed from the node list.
+		 *
+		 * <p>The delegate will pass a single parameter to the listeners - the node that was removed.</p>
 		 */
 		public var nodeRemoved : NodeRemoved;
-		
+
+
 		public function NodeList()
 		{
 			nodeAdded = new NodeAdded();
 			nodeRemoved = new NodeRemoved();
 		}
-		
+
 		public function add( node : Node ) : void
 		{
 			if( ! head )
@@ -66,7 +68,7 @@ package ash.core
 			}
 			nodeAdded( node );
 		}
-		
+
 		public function remove( node : Node ) : void
 		{
 			if ( head == node)
@@ -77,12 +79,12 @@ package ash.core
 			{
 				tail = tail.previous;
 			}
-			
+
 			if (node.previous)
 			{
 				node.previous.next = node.next;
 			}
-			
+
 			if (node.next)
 			{
 				node.next.previous = node.previous;
@@ -90,7 +92,7 @@ package ash.core
 			nodeRemoved( node );
 			// N.B. Don't set node.next and node.previous to null because that will break the list iteration if node is the current node in the iteration.
 		}
-		
+
 		public function removeAll() : void
 		{
 			while( head )
@@ -103,7 +105,7 @@ package ash.core
 			}
 			tail = null;
 		}
-		
+
 		/**
 		 * true if the list is empty, false otherwise.
 		 */
@@ -111,7 +113,7 @@ package ash.core
 		{
 			return head == null;
 		}
-		
+
 		/**
 		 * Swaps the positions of two nodes in the list. Useful when sorting a list.
 		 */
@@ -157,7 +159,7 @@ package ash.core
 				tail = node1;
 			}
 			if( node1.previous )
-			{							
+			{
 				node1.previous.next = node1;
 			}
 			if( node2.previous )
@@ -173,19 +175,19 @@ package ash.core
 				node2.next.previous = node2;
 			}
 		}
-		
+
 		/**
-		 * Performs an insertion sort on the node list. In general, insertion sort is very efficient with short lists 
+		 * Performs an insertion sort on the node list. In general, insertion sort is very efficient with short lists
 		 * and with lists that are mostly sorted, but is inefficient with large lists that are randomly ordered.
-		 * 
+		 *
 		 * <p>The sort function takes two nodes and returns a Number.</p>
-		 * 
+		 *
 		 * <p><code>function sortFunction( node1 : MockNode, node2 : MockNode ) : Number</code></p>
-		 * 
+		 *
 		 * <p>If the returned number is less than zero, the first node should be before the second. If it is greater
 		 * than zero the second node should be before the first. If it is zero the order of the nodes doesn't matter
 		 * and the original order will be retained.</p>
-		 * 
+		 *
 		 * <p>This insertion sort implementation runs in place so no objects are created during the sort.</p>
 		 */
 		public function insertionSort( sortFunction : Function ) : void
@@ -244,18 +246,18 @@ package ash.core
 				}
 			}
 		}
-		
+
 		/**
 		 * Performs a merge sort on the node list. In general, merge sort is more efficient than insertion sort
 		 * with long lists that are very unsorted.
-		 * 
+		 *
 		 * <p>The sort function takes two nodes and returns a Number.</p>
-		 * 
+		 *
 		 * <p><code>function sortFunction( node1 : MockNode, node2 : MockNode ) : Number</code></p>
-		 * 
+		 *
 		 * <p>If the returned number is less than zero, the first node should be before the second. If it is greater
 		 * than zero the second node should be before the first. If it is zero the order of the nodes doesn't matter.</p>
-		 * 
+		 *
 		 * <p>This merge sort implementation creates and uses a single Vector during the sort operation.</p>
 		 */
 		public function mergeSort( sortFunction : Function ) : void
@@ -289,10 +291,10 @@ package ash.core
 			tail = head = lists[0];
 			while( tail.next )
 			{
-				tail = tail.next;	
+				tail = tail.next;
 			}
 		}
-		
+
 		private function merge( head1 : Node, head2 : Node, sortFunction : Function ) : Node
 		{
 			var node : Node;

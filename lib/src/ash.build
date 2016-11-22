@@ -1,18 +1,18 @@
 {
-	"name": "Ash",
-	"version": "1.0",
-	"outputDir": "./build",
-	"references": [
-		"System",
-		"Loom"
-	],
-	"modules": [
-		{
-			"name": "Ash",
-			"version": "1.0",
-			"sourcePath": [
-				"."
-			]
-		}
-	]
+  "name": "Ash",
+  "version": "0.10.0",
+  "outputDir": "build",
+  "references": [
+    "System",
+    "Loom"
+  ],
+  "modules": [
+    {
+      "name": "Ash",
+      "version": "0.10.0",
+      "sourcePath": [
+        "."
+      ]
+    }
+  ]
 }
